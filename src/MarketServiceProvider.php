@@ -16,7 +16,7 @@ class MarketServiceProvider extends AbstractSeatPlugin
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/Config/seat-busa-market.php', 'seat-busa-market');
-        $this->mergeConfigFrom(__DIR__ . '/Config/seat-busa-market.sidebar.php', 'package.sidebar.tools.entries');
+        $this->mergeConfigFrom(__DIR__ . '/Config/seat-busa-market.sidebar.php', 'package.sidebar');
         $this->registerPermissions(__DIR__ . '/Config/seat-busa-market.permissions.php', 'seat-busa-market');
     }
 

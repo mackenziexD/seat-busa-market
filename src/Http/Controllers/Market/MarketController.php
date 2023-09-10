@@ -1,6 +1,6 @@
 <?php
 
-namespace Helious\SeatBusaHr\Http\Controllers\Character;
+namespace Helious\SeatBusaMarket\Http\Controllers\Market;
 
 use Seat\Web\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -9,7 +9,7 @@ use Seat\Web\Http\DataTables\Scopes\CharacterScope;
 
 use Seat\Eveapi\Models\Assets\CorporationAsset;
 
-class MarketController extends CorporationAsset
+class MarketController extends Controller
 {
     /**
      * Pulls the corp assets for corp id 170892597(CRICE Corporation) and lists all the items in the CorpSAG7 hangar.
@@ -19,11 +19,15 @@ class MarketController extends CorporationAsset
      public function index()
     {
         $corpAssets = CorporationAsset::where('corporation_id', 170892597)
-            ->where('location_flag', 'CorpSAG7')
-            ->with('type')
+        ->where('location_flag', 'CorpSAG7')
+        ->whereHas('container', function ($query) {
+            $query->where('location_flag', '!=', 'AssetSafety');
+        })
+        ->with('type', 'container', 'structure', 'station')
         ->get();
+    
 
-        dd($corpAssets);
+        return view('seat-busa-market::market.index', compact('corpAssets'));
     }
 
 
