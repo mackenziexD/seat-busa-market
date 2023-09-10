@@ -1,0 +1,34 @@
+{
+    "name": "helious/seat-busa-market",
+    "type": "library",
+    "keywords": [
+        "helious",
+        "seat-busa-market"
+    ],
+    "authors": [
+        {
+            "name": "Helious",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Helious\\SeatBusaMarket\\": "src/"
+        }
+    },
+    "require": {
+        "laravel/framework": "^6.0",
+        "eveseat/web": "^4.0",
+        "eveseat/eveapi": "^4.0",
+        "warlof/seat-connector": "^2.3.1",
+        "warlof/seat-discord-connector": "^5.1.1",
+        "warlof/seat-teamspeak": "^5.1.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Helious\\SeatBusaMarket\\MarketServiceProvider"
+            ]
+        }
+    }
+}
