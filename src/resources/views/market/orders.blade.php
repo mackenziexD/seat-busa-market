@@ -29,7 +29,7 @@
                                 <td>{{ $order->creator->name }}</td>
                                 <td><a href="{{ $order->janice_link }}" target="_blank">{{ $order->janice_link }}</a></td>
                                 <td>{{ $order->status }}</td>
-                                <td>{{ $order->created_at }}</td>
+                                <td>{{ $order->created_at->diffForHumans() }}</td>
                                 <td><a href="{{ route('seat-busa-market.order', ['id' => $order->id]) }}">View</a></td>
                             </tr>
                             @endforeach

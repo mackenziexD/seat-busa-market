@@ -121,7 +121,7 @@ class MarketController extends Controller
      */
     public function orders()
     {
-        $orders = MarketOrders::get();
+        $orders = MarketOrders::orderBy('created_at', 'desc')->get();
 
         return view('seat-busa-market::market.orders', compact('orders'));
     }
