@@ -26,6 +26,9 @@ composer require helious/seat-busa-market
 6. Alerts To `Seat BUSA MART - New Order`.
 7. Add and your all set!.
 
+## Janice
+This plugin uses Janice by Mooncake Industrial to appraise orders and wont work without it. obtain a key from [here](https://discord.gg/7McHR3r) from `Eris Kirke`. once you have it add `JANICE_API_KEY` to your .env with the API key.
+
 ### Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
