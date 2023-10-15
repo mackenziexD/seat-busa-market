@@ -17,6 +17,7 @@ class MarketServiceProvider extends AbstractSeatPlugin
     {
         $this->mergeConfigFrom(__DIR__ . '/Config/seat-busa-market.php', 'seat-busa-market');
         $this->mergeConfigFrom(__DIR__ . '/Config/seat-busa-market.sidebar.php', 'package.sidebar');
+        $this->mergeConfigFrom(__DIR__ . '/Config/customENV.php', 'seat-busa-market-custom');
         $this->registerPermissions(__DIR__ . '/Config/seat-busa-market.permissions.php', 'seat-busa-market');
     }
 
@@ -34,6 +35,14 @@ class MarketServiceProvider extends AbstractSeatPlugin
 
         // Publish migrations
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
+
+        $this->publishes([
+            __DIR__ . '/Config/customENV.php' => config_path('seat-busa-market-custom.php'),
+        ], 'config');
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/Config/notifications.alerts.php', 'notifications.alerts'
+        );
 
     }
 

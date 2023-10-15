@@ -9,7 +9,7 @@ return [
         'entries' => [
             [
                 'name' => 'Market',
-                'icon' => 'fa fa-usd',
+                'icon' => 'fa fa-money-bill',
                 'route' => 'seat-busa-market.index',
                 'permission' => [
                     'seat-busa-market.market',

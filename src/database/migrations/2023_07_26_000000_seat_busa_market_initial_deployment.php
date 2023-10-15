@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class SeatBusaHrInitialDeployment extends Migration
+class SeatBusaMarketInitialDeployment extends Migration
 {
     /**
      * Run the migrations.
@@ -18,6 +18,9 @@ class SeatBusaHrInitialDeployment extends Migration
             $table->integer('user_id');
             $table->longText('order_json');
             $table->bigInteger('estimated_price');
+            $table->bigInteger('appraised_price')->nullable();
+            $table->string('janice_link')->nullable();
+            $table->string('status')->default('Outstanding');
             $table->timestamps();
         });
     }

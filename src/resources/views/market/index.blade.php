@@ -14,7 +14,7 @@
             
             <div class="row">
                 <div class="col-md-6">
-                        <form action="" method="post" class="mt-4">
+                        <form action="{{route('seat-busa-market.orders')}}" method="post" class="mt-4">
                             <div class="col-lg-12">
                                 @foreach($corpAssets as $asset)
                                     <div class="row mb-4">
@@ -54,7 +54,11 @@
                         <div class="card-footer">
                             <form action="" method="post">
                                 <p class="totalISK">Grand Total: <span id="grandTotal">0 ISK</span></p>
-                                <button class="btn btn-success btn-block" id="submitOrder" disabled>Submit Order</button>
+                                @csrf
+                                <input type="hidden" name="janiceAppraisal" id="janiceAppraisal">
+                                <input type="hidden" name="items" id="items">
+                                <button class="btn btn-info btn-block" id="appraisOrder" disabled>Appraise Order</button>
+                                <button class="btn btn-success btn-block" id="submitOrder" type="submit" hidden>Submit Order</button>
                             </form>
                         </div>
                     </div>
@@ -66,51 +70,63 @@
 @stop
 
 @push('javascript')
+<script>
+
+</script>
 
 <script>
-const submitButton = document.getElementById('submitOrder');
-submitButton.addEventListener('click', function(event) {
-    event.preventDefault();
-    console.log('submitting order');
+    const submitButton = document.getElementById('appraisOrder');
+    submitButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('submitting order');
 
-    // get the cart items and the quantity being ordered
-    const cartItems = document.querySelectorAll('#cart li');
-    const orderItems = [];
-    cartItems.forEach((item) => {
-        const typeName = item.querySelector('div > div:nth-child(1)').textContent.split(' - ')[0].replace(/\n/g, '').trim();
-        const quantity = parseInt(item.querySelector('div > div:nth-child(2) > input').value);
-        orderItems.push({ typeName, quantity });
-    });
+        // get the cart items and the quantity being ordered
+        const cartItems = document.querySelectorAll('#cart li');
+        const orderItems = [];
+        cartItems.forEach((item) => {
+            const typeName = item.querySelector('div > div:nth-child(1)').textContent.split(' - ')[0].replace(/\n/g, '').trim();
+            const quantity = parseInt(item.querySelector('div > div:nth-child(2) > input').value);
+            orderItems.push({ typeName, quantity });
+        });
 
-    console.log(orderItems);
+        const items = orderItems.map(item => ({
+            name: item.typeName,
+            quantity: item.quantity
+        }));
 
-    // generating janice apprasial link
-    const url = 'https://janice.e-351.com/api/rest/v2/appraisal?market=2&compactize=true&pricePercentage=1';
-    let responseData; // Declare a variable to store the response data
+        const url = 'https://market.nothingtoseehere.uk/appraisal/structured.json';
 
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'accept': 'application/json',
-            'Content-Type': 'text/plain'
-            'X-ApiKey': 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6' // place holder not an actual key, idiots...
-        },
-        body: data
+        // Construct the request payload
+        const payload = {
+            market_name: 'jita',
+            items: items
+        };
+
+        // Make the POST request
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(payload)
         })
         .then(response => response.json())
         .then(data => {
-            // Assign the response data to the variable
-            responseData = data;
+            console.log('Success:', data);
+            // workout what 95% of the appraisal is
+            let finalPrice = (data.appraisal.totals.sell * 0.95);
+            document.getElementById('grandTotal').innerHTML = `${finalPrice.toLocaleString()} ISK<br>THIS PRICE IS AN ESTIMATE BASED ON 95% OF THE APPRAISAL.`;
+            document.getElementById('janiceAppraisal').value = finalPrice;
+            // Show the submit order button
+            document.getElementById('submitOrder').hidden = false;
+            document.getElementById('appraisOrder').hidden = true;
+
+            // add the items to the form so we can submit them
+            document.getElementById('items').value = JSON.stringify(orderItems);
         })
         .catch(error => {
             console.error('Error:', error);
         });
-
-
-    
-
-});
+    });
 </script>
+
 
 <script>
     // Shopping cart items will be stored in this array
@@ -150,6 +166,10 @@ submitButton.addEventListener('click', function(event) {
         const grandTotalElement = document.getElementById('grandTotal');
         cartList.innerHTML = ''; // Clear the cart list
 
+        // reset the buttons
+        document.getElementById('submitOrder').hidden = true;
+        document.getElementById('appraisOrder').hidden = false;
+
         let grandTotal = 0;
 
         if (cartItems.length === 0) {
@@ -167,8 +187,8 @@ submitButton.addEventListener('click', function(event) {
                             ${item.typeName} - Price: ${item.price.toLocaleString()} ISK
                         </div>
                         <div class="col-md-4">
-                            <input type="number" class="form-control" value="${item.quantity}" min="1" max="${item.maxStock}" 
-                                onchange="updateQuantity(${index}, this.value)">
+                            <input type="number" class="form-control" value="${item.quantity}" min="1" max="${item.maxStock}"
+                                onchange="updateQuantity(${index}, this.value)" onkeyup="checkValue(event)">
                         </div>
                         <div class="col-md-2">
                             <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Remove</button>
@@ -183,11 +203,26 @@ submitButton.addEventListener('click', function(event) {
             });
 
             // remove disabled from submitOrder button
-            document.getElementById('submitOrder').disabled = false;
+            document.getElementById('appraisOrder').disabled = false;
         }
+
+        // add 1.1% to the grand total
+        grandTotal = grandTotal * 1.1;
 
         // Update the grand total
         grandTotalElement.textContent = `${grandTotal.toLocaleString()} ISK`;
+    }
+
+    function checkValue(event){
+        // get the value of the input
+        let value = event.target.value;
+        // get the max stock
+        let maxStock = event.target.getAttribute('max');
+
+        if (value > maxStock) {
+            alert(`Quantity exceeds current stock (${maxStock})`);
+            event.target.value = maxStock;
+        }
     }
 
     // Function to update the quantity in the cart
