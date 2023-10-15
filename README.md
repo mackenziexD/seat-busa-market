@@ -13,6 +13,12 @@ You can install the package via composer:
 composer require helious/seat-busa-market
 ```
 
+then migrate the database
+```bash
+php artisan migrate
+```
+
+
 ## Permissions
 - Remember to give Roles the `Access Market` role under Seat-busa-market
 - `Access Orders` lets you view all existing orders.
