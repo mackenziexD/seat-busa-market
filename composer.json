@@ -19,10 +19,7 @@
     "require": {
         "laravel/framework": "^10.0",
         "eveseat/web": "^5.0",
-        "eveseat/eveapi": "^5.0",
-        "warlof/seat-connector": "^3.0.0",
-        "warlof/seat-discord-connector": "^6.0.1",
-        "warlof/seat-teamspeak": "^6.0.1"
+        "eveseat/eveapi": "^5.0"
     },
     "extra": {
         "laravel": {
