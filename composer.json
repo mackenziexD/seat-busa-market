@@ -17,9 +17,9 @@
         }
     },
     "require": {
-        "laravel/framework": "^6.0",
-        "eveseat/web": "^4.0",
-        "eveseat/eveapi": "^4.0",
+        "laravel/framework": "^10.0",
+        "eveseat/web": "^5.0",
+        "eveseat/eveapi": "^5.0",
         "warlof/seat-connector": "^2.3.1",
         "warlof/seat-discord-connector": "^5.1.1",
         "warlof/seat-teamspeak": "^5.1.0"
